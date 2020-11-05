@@ -9,12 +9,15 @@ import net.runelite.api.Point;
 import net.runelite.api.events.FocusChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.game.WorldService;
 import net.runelite.client.plugins.fps.FpsConfig;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.ui.overlay.OverlayUtil;
+import net.runelite.http.api.worlds.World;
+import net.runelite.http.api.worlds.WorldResult;
 
 
 /**
@@ -28,28 +31,35 @@ public class PingOverlay extends Overlay{
     private static final String PING_STRING = "Ping";
     private static final int HIGH_LOW_BOUNDARY = 70;
 
+    private final net.runelite.api.Client client;
+
 
     @Inject
-    private PingOverlay(){
+    private PingOverlay(net.runelite.api.Client client){
+        this.client = client;
         setLayer(OverlayLayer.ABOVE_WIDGETS);
         setPriority(OverlayPriority.HIGH);
         setPosition(OverlayPosition.DYNAMIC);
     }
 
-    private boolean isPingHigh(){ return true;}
+    @Inject
+    private WorldService worldService;
+
+    private boolean isPingHigh(){ return ping > HIGH_LOW_BOUNDARY}
 
     private Color getPingValueColor(){return isPingHigh()? Color.red : Color.green;}
 
     @Override
     public Dimension render(Graphics2D graphics) {
+        WorldResult worldResult = worldService.getWorlds();
         Widget logoutButton = client.getWidget(WidgetInfo.RESIZABLE_MINIMAP_LOGOUT_BUTTON);
         int xOffset = X_OFFSET;
         if (logoutButton != null && !logoutButton.isHidden())
         {
             xOffset += logoutButton.getWidth();
         }
-
-        final String text = client.getFPS() + PING_STRING;
+        final World currentWorld = worldResult.findWorld(client.getWorld());
+        final String text = DisplayPingPlugin.ping(currentWorld) + PING_STRING;
         final int textWidth = graphics.getFontMetrics().stringWidth(text);
         final int textHeight = graphics.getFontMetrics().getAscent() - graphics.getFontMetrics().getDescent();
 

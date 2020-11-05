@@ -16,6 +16,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.fps.FpsConfig;
 import net.runelite.client.plugins.fps.FpsDrawListener;
 import net.runelite.client.plugins.fps.FpsOverlay;
+import net.runelite.client.plugins.worldhopper.ping.Ping;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.client.ui.overlay.OverlayManager;
 
@@ -47,6 +48,12 @@ public class DisplayPingPlugin extends Plugin
 	{
 		overlayManager.remove(overlay);
 	}
+
+	public static int ping(net.runelite.http.api.worlds.World world){
+		int ping = ping(world);
+		return ping;
+	}
+
 
 	@Provides
     DisplayPingConfig provideConfig(ConfigManager configManager)
