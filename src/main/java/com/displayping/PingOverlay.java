@@ -15,9 +15,6 @@ import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.ui.overlay.OverlayUtil;
 import net.runelite.http.api.worlds.World;
 import net.runelite.http.api.worlds.WorldResult;
-import java.lang.Thread;
-import java.util.concurrent.Executors;
-
 
 /**
  * This is meant to show the ping to the connected world similarly to the FPS plugin
@@ -62,7 +59,6 @@ public class PingOverlay extends Overlay{
         }
 
         final World currentWorld = worldResult.findWorld(client.getWorld());
-        Thread getPing = new Thread();
         final int ping = DisplayPingPlugin.ping(currentWorld);
 
         if (ping < 0)
