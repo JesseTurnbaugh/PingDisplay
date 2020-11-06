@@ -22,26 +22,32 @@ import net.runelite.http.api.worlds.WorldResult;
 
 public class PingOverlay extends Overlay{
 
+    private final net.runelite.api.Client client;
+    private final DisplayPingConfig config;
+
     private static final int Y_OFFSET = 1;
     private static final int X_OFFSET = 85;
     private static final String PING_STRING = "ms";
-    private static final int HIGH_LOW_BOUNDARY = 70;
-
-    private final net.runelite.api.Client client;
-
+    private static int highLowBoundary;
 
     @Inject
-    private PingOverlay(net.runelite.api.Client client){
+    private PingOverlay(net.runelite.api.Client client, DisplayPingConfig config){
         this.client = client;
+        this.config = config;
+        reloadConfig();
         setLayer(OverlayLayer.ABOVE_WIDGETS);
         setPriority(OverlayPriority.HIGH);
         setPosition(OverlayPosition.DYNAMIC);
     }
 
+    void reloadConfig(){
+        highLowBoundary = config.highLowPing();
+    }
+
     @Inject
     private WorldService worldService;
 
-    private boolean isPingHigh(int ping){ return ping > HIGH_LOW_BOUNDARY? true : false;}
+    private boolean isPingHigh(int ping){ return ping > highLowBoundary? true : false;}
 
     private Color getPingValueColor(int ping){return isPingHigh(ping)? Color.red : Color.green;}
 
