@@ -3,21 +3,10 @@ package com.displayping;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.events.FocusChanged;
-import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.fps.FpsConfig;
-import net.runelite.client.plugins.fps.FpsDrawListener;
-import net.runelite.client.plugins.fps.FpsOverlay;
-import net.runelite.client.plugins.worldhopper.ping.Ping;
-import net.runelite.client.ui.DrawManager;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @Slf4j
@@ -50,7 +39,7 @@ public class DisplayPingPlugin extends Plugin
 	}
 
 	public static int ping(net.runelite.http.api.worlds.World world){
-		int ping = ping(world);
+		int ping = net.runelite.client.plugins.worldhopper.ping.Ping.ping(world);
 		return ping;
 	}
 
