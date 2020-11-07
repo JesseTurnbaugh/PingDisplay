@@ -59,4 +59,10 @@ public class DisplayPingPlugin extends Plugin
 		int ping = net.runelite.client.plugins.worldhopper.ping.Ping.ping(world);
 		return ping;
 	}
+
+	//all world numbers seem to be between 301 and 570ish, so this makes sure that the client has a valid world
+	public static boolean validWorld(int worldNum) {
+		return (worldNum > 300 && worldNum < 600);
+	}
+
 }

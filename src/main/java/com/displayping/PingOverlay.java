@@ -3,6 +3,7 @@ package com.displayping;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.util.List;
 import javax.inject.Inject;
 import net.runelite.api.Point;
 import net.runelite.api.widgets.Widget;
@@ -25,10 +26,10 @@ public class PingOverlay extends Overlay{
     private final net.runelite.api.Client client;
     private final DisplayPingConfig config;
 
-    private static final int Y_OFFSET = 1;
-    private static final int X_OFFSET = 85;
+    public static final int Y_OFFSET = 1;
+    public static final int X_OFFSET = 85;
     private static final String PING_STRING = "ms";
-    private static int highLowBoundary;
+    private static int highLowBoundary = 65; //default value of 65 that can be changed with config included for Junit tests
 
     @Inject
     private PingOverlay(net.runelite.api.Client client, DisplayPingConfig config){
@@ -47,9 +48,9 @@ public class PingOverlay extends Overlay{
     @Inject
     private WorldService worldService;
 
-    private boolean isPingHigh(int ping){ return ping > highLowBoundary? true : false;}
+    public static boolean isPingHigh(int ping){ return ping > highLowBoundary? true : false;}
 
-    private Color getPingValueColor(int ping){return isPingHigh(ping)? Color.red : Color.green;}
+    public static Color getPingValueColor(int ping){return isPingHigh(ping)? Color.red : Color.green;}
 
     @Override
     public Dimension render(Graphics2D graphics) {
@@ -64,7 +65,11 @@ public class PingOverlay extends Overlay{
             xOffset += logoutButton.getWidth();
         }
 
-        final World currentWorld = worldResult.findWorld(client.getWorld());
+        final World currentWorld;
+        if (DisplayPingPlugin.validWorld(client.getWorld())) {
+            currentWorld = worldResult.findWorld(client.getWorld());
+        }else return null;
+
         final int ping = DisplayPingPlugin.ping(currentWorld);
 
         if (ping < 0)
